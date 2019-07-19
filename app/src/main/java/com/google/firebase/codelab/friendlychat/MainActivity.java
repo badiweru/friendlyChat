@@ -20,13 +20,13 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 //import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 //import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 //import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -95,7 +95,7 @@ public class MainActivity extends FragmentActivity
     private String mPhotoUrl;
     private SharedPreferences mSharedPreferences;
     private GoogleApiClient mGoogleApiClient;
-    private static final String MESSAGE_URL = "https://mybot-2f0ad.firebaseio.com//message/";
+    private static final String MESSAGE_URL = "https://mybot-2f0ad.firebaseio.com//messages/";
 
     private Button mSendButton;
     private RecyclerView mMessageRecyclerView;
