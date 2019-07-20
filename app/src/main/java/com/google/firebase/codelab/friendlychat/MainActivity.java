@@ -19,13 +19,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+
 import androidx.annotation.NonNull;
-//import android.support.v4.app.FragmentActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-//import android.support.v7.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-//import android.support.v7.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -42,8 +40,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.fragment.app.FragmentActivity;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -65,7 +61,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends FragmentActivity
+public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
@@ -76,10 +72,10 @@ public class MainActivity extends FragmentActivity
 
         public MessageViewHolder(View v) {
             super(v);
-            messageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
-            messageImageView = (ImageView) itemView.findViewById(R.id.messageImageView);
-            messengerTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
-            messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
+            messageTextView = itemView.findViewById(R.id.messageTextView);
+            messageImageView = itemView.findViewById(R.id.messageImageView);
+            messengerTextView = itemView.findViewById(R.id.messengerTextView);
+            messengerImageView = itemView.findViewById(R.id.messengerImageView);
         }
     }
 
@@ -116,13 +112,15 @@ public class MainActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
 
         // Initialize Firebase Auth
-        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseAuth = mFirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+        Log.d(TAG, "User:" + mFirebaseUser + " Auth:" +mFirebaseAuth);
 
         if (mFirebaseUser == null) {
             // Not signed in, launch the Sign In activity
@@ -142,8 +140,8 @@ public class MainActivity extends FragmentActivity
                 .build();
 
         // Initialize ProgressBar and RecyclerView.
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mMessageRecyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView);
+        mProgressBar = findViewById(R.id.progressBar);
+        mMessageRecyclerView = findViewById(R.id.messageRecyclerView);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(true);
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -167,14 +165,15 @@ public class MainActivity extends FragmentActivity
                         .setQuery(messagesRef, parser)
                         .build();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder>(options) {
+
             @Override
-            public MessageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
                 return new MessageViewHolder(inflater.inflate(R.layout.item_message, viewGroup, false));
             }
 
             @Override
-            protected void onBindViewHolder(final MessageViewHolder viewHolder,
+            protected void onBindViewHolder(@NonNull final MessageViewHolder viewHolder,
                                             int position,
                                             FriendlyMessage friendlyMessage) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
@@ -245,7 +244,7 @@ public class MainActivity extends FragmentActivity
 
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
 
-        mMessageEditText = (EditText) findViewById(R.id.messageEditText);
+        mMessageEditText = findViewById(R.id.messageEditText);
         mMessageEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -265,7 +264,7 @@ public class MainActivity extends FragmentActivity
             }
         });
 
-        mSendButton = (Button) findViewById(R.id.sendButton);
+        mSendButton = findViewById(R.id.sendButton);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -281,7 +280,7 @@ public class MainActivity extends FragmentActivity
             }
         });
 
-        mAddMessageImageView = (ImageView) findViewById(R.id.addMessageImageView);
+        mAddMessageImageView = findViewById(R.id.addMessageImageView);
         mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
